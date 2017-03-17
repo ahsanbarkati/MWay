@@ -16,7 +16,7 @@ import android.widget.Toast;
 import java.util.concurrent.TimeUnit;
 
 public class Main2Activity extends functions  {
-
+int k=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,8 @@ public class Main2Activity extends functions  {
         height = size.y;
         cx=width/7;
         cy=height/7;
-        listenchk=0;
-        listen();
+        listenchk=1;
+       //listen();
 
 
         Bundle bundle =getIntent().getExtras();
@@ -49,6 +49,9 @@ public class Main2Activity extends functions  {
 
     public boolean onTouchEvent(MotionEvent event) {
         float X=0,Y=0,h;
+int i,j;
+        if(k==0){
+            listen();k++;}
 
             if(event.getActionMasked()==MotionEvent.ACTION_DOWN) {
                 X = event.getX();
@@ -56,14 +59,26 @@ public class Main2Activity extends functions  {
 
                 boolean ammended;
                if(flag==1){
-                   if(turn==-1){ammended=ammend(X,Y);
-                   if(ammended)send(X,Y);}
-                   if(turn==1&&stx!=null)ammend(Float.parseFloat(stx),Float.parseFloat(sty));
+                   if(turn==-1)
+                   {   ammended=ammend(X,Y);
+                       // if(ammended)trysend(X,Y);
+                   }
+                   if(turn==1&&stx!=null){
+                        i=Integer.parseInt(stx);
+                        j=Integer.parseInt(sty);
+                       state[i][j]=1-turn;
+                   }
                }
                 if(flag==0){
-                    if(turn==-1){ammended=ammend(X,Y);
-                        if(ammended)send(X,Y);}
-                    if(turn==1&&stx!=null)ammend(Float.parseFloat(stx),Float.parseFloat(sty));
+                    if(turn==1){
+                      ammended=ammend(X,Y);
+                        //if(ammended)trysend(X,Y);
+                    }
+                    if(turn==-11&&stx!=null){
+                        i=Integer.parseInt(stx);
+                        j=Integer.parseInt(sty);
+                        state[i][j]=1-turn;
+                    }
                 }
                 //else if(turn==-1&&stx!=null) ammend(Float.parseFloat(stx),Float.parseFloat(sty));
                 //if(ammended)send(X,Y); //this will send it to db

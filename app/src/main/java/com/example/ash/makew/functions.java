@@ -25,8 +25,8 @@ import java.util.Random;
  */
 
 public class functions extends AppCompatActivity {
-
-    int width, height,listenchk=0;
+int c=0;
+    int width, height,listenchk=1;
     float cx,cy;
     int turn=-1;
 
@@ -448,7 +448,8 @@ public class functions extends AppCompatActivity {
                         MediaPlayer mp2 = MediaPlayer.create(getApplicationContext(), R.raw.button);
                         mp2.start();}
                     ag = again(X, Y);
-                    return true;
+                    c++;
+                    send(i,j);
                 }
         ag = again(X, Y);
         return false;
@@ -463,9 +464,9 @@ public class functions extends AppCompatActivity {
         if(((X-x)*(X-x)+(Y-y)*(Y-y)-rad*rad)<0) return true;
         else return false;
     }
-    public void send(float X,float Y){
-        xcor.setValue(Float.toString(X));
-        ycor.setValue(Float.toString(Y));
+    public void send(int X,int Y){
+        xcor.setValue(Integer.toString(X));
+        ycor.setValue(Integer.toString(Y));
     }
     public void listen(){
         xcor.addValueEventListener(new ValueEventListener() {
@@ -488,8 +489,9 @@ public class functions extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                listenchk=1;
+
                 sty = dataSnapshot.getValue(String.class);
+                turn=turn*(-1);
                 //Log.d(TAG, "Value is: " + value);
             }
 
@@ -499,10 +501,33 @@ public class functions extends AppCompatActivity {
                 //Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+    if(stx!=null){
+        int i=Integer.parseInt(stx);
+        int j=Integer.parseInt(sty);
+        state[i][j]=1-turn;
+        draw();}
+
+
 
     }
     public boolean again(float X,float Y){
         if(Y>480&&Y<680&&X>180&&X<260)return true;
         else return false;
     }
+    public void trysend(float x,float y)
+    {
+        int i,j;
+        for(i=0;i<80;i++)
+        {
+            for(j=0;j<80;j++)
+            {
+                if(chk(j%10 * cx,j/10 * cy,i%10 * cx,i/10 * cy,x,y))
+                {
+                    send(i,j);
+                }
+            }
+        }
+    }
+
+
 }

@@ -86,8 +86,10 @@ int i,j;
                 //while(stx==null)
 
                 //listen();
-
-
+                if(stx!=null){
+                 i=Integer.parseInt(stx);
+                 j=Integer.parseInt(sty);
+                ammend((i%10*cx+j%10*cx)/2,(i/10*cy+j/10*cy)/2);}
                 Toast.makeText(this, stx + " " + sty, Toast.LENGTH_SHORT).show();
 
 

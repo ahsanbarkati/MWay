@@ -13,14 +13,25 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
 public class Main2Activity extends AppCompatActivity {
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference xcor = database.getReference("x");
+    DatabaseReference ycor = database.getReference("y");
 
 
     int state[][]=new int [80][80];
@@ -326,7 +337,7 @@ public class Main2Activity extends AppCompatActivity {
         int k,l;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+       // dref= FirebaseDatabase.getInstance().getReference();
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -336,15 +347,15 @@ public class Main2Activity extends AppCompatActivity {
         cy=height/7;
 
 
-        int randnum=randInt(1,4);
+       int randnum=randInt(1,4);
         if(randnum==1)
             initialise1();
         if(randnum==2)
             initialise2();
         if(randnum==3)
             initialise3();
-        if(randnum==4)
-            initialise4();
+       if(randnum==4)
+           initialise4();
 
 
 
@@ -481,8 +492,12 @@ public class Main2Activity extends AppCompatActivity {
         }
 
     }
+    public class cor{
+        float X,Y;
+    }
     public boolean ammend(float X,float Y){
         int i,j;
+
 
         for(i=0;i<80;i++)
             for(j=0;j<80;j++)
@@ -506,17 +521,76 @@ public class Main2Activity extends AppCompatActivity {
         if(((X-x)*(X-x)+(Y-y)*(Y-y)-rad*rad)<0) return true;
         else return false;
     }
-    public boolean onTouchEvent(MotionEvent event) {
 
-        float X = event.getX();
-        float Y = event.getY();
+    public String stx,sty;
+    public boolean onTouchEvent(MotionEvent event) {
+        float X=0,Y=0;
+
+
+            X = event.getX();
+            Y = event.getY();
+
+
+
+            //send(X,Y); this will send it to db
+
+           /* listen();
+            X=Float.parseFloat(stx);   //call this to retrieve
+            Y=Float.parseFloat(sty);
+            */
+
+
+
         boolean  tell=ammend(X,Y);
         ag=again(X,Y);
         draw();
         return true;
     }
+    public void send(float X,float Y){
+        xcor.setValue(Float.toString(X));
+        ycor.setValue(Float.toString(Y));
+    }
+    public void listen(){
+        xcor.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                stx = dataSnapshot.getValue(String.class);
+                //Log.d(TAG, "Value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        ycor.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                sty = dataSnapshot.getValue(String.class);
+                //Log.d(TAG, "Value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
     public boolean again(float X,float Y){
         if(Y>480&&Y<680&&X>180&&X<260)return true;
         else return false;
     }
+
+
+
+
+
 }
+
+//------------

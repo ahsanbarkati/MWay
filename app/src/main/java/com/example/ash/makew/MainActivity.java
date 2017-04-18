@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void call()
     {
-        Intent i = new Intent(this,Main4Activity.class);
+        Intent i = new Intent(this,Main2Activity.class);
         startActivity(i);
     }
 }
